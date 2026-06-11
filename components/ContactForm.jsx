@@ -1,81 +1,71 @@
-'use client'
-
-import { useState } from 'react'
+"use client";
+import { useState } from 'react';
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  })
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('Form submitted:', formData)
-    setFormData({ name: '', email: '', message: '' })
+  function handleSubmit(e) {
+    e.preventDefault();
+    const trimmedName = name.trim().slice(0, 80);
+    const trimmedEmail = email.trim().slice(0, 120);
+    const trimmedMessage = message.trim().slice(0, 1200);
+    const subject = encodeURIComponent(`Website contact from ${trimmedName}`);
+    const body = encodeURIComponent(`Name: ${trimmedName}\nEmail: ${trimmedEmail}\n\n${trimmedMessage}`);
+    const recipient = ['Yaizeds', 'gmail.com'].join('@');
+    window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md"
-    >
-      <div className="mb-4">
-        <label htmlFor="name" className="block text-sm font-medium mb-2">
-          Name
-        </label>
+    <form onSubmit={handleSubmit} className="studio-form">
+      <div className="studio-field">
+        <label>Name</label>
         <input
+          required
           type="text"
-          id="name"
           name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          autoComplete="name"
+          maxLength={80}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="studio-input"
         />
       </div>
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-medium mb-2">
-          Email
-        </label>
+
+      <div className="studio-field">
+        <label>Email</label>
         <input
+          required
           type="email"
-          id="email"
           name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          autoComplete="email"
+          inputMode="email"
+          maxLength={120}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="studio-input"
         />
       </div>
-      <div className="mb-4">
-        <label htmlFor="message" className="block text-sm font-medium mb-2">
-          Message
-        </label>
+
+      <div className="studio-field">
+        <label>Message</label>
         <textarea
-          id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
           required
-          rows="4"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          name="message"
+          maxLength={1200}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          rows={5}
+          className="studio-input"
         />
       </div>
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white font-medium py-2 rounded-lg hover:bg-blue-700 transition"
-      >
-        Send Message
-      </button>
+
+      <div>
+        <button type="submit" className="studio-button">
+          Send Message
+        </button>
+      </div>
     </form>
-  )
+  );
 }
