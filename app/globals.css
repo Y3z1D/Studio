@@ -50,6 +50,7 @@ body {
     radial-gradient(circle at 16% 22%, rgba(0, 245, 160, 0.16), transparent 34%),
     radial-gradient(circle at 84% 18%, rgba(5, 213, 255, 0.15), transparent 34%),
     linear-gradient(180deg, rgba(3, 7, 18, 0.08), rgba(3, 7, 18, 0.82));
+  will-change: contents;
 }
 
 .studio-shell {
@@ -101,7 +102,8 @@ body {
   color: #030712;
   font-weight: 900;
   box-shadow: 0 14px 28px rgba(0, 245, 160, 0.22);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  will-change: transform;
 }
 
 .studio-button:hover {
@@ -124,12 +126,13 @@ body {
 .studio-card {
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 16px;
   padding: 28px;
   box-shadow: 0 12px 40px var(--panel-shadow);
-  transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  will-change: transform;
 }
 
 .studio-card:hover {
@@ -214,8 +217,18 @@ body {
   justify-content: center;
   padding: 24px;
   background: rgba(3, 7, 18, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: authOverlayIn 0.2s ease-out;
+}
+
+@keyframes authOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .auth-modal-card {
@@ -226,7 +239,8 @@ body {
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
   padding: 34px;
   text-align: center;
-  animation: authModalIn 0.24s ease-out;
+  animation: authModalIn 0.2s ease-out;
+  will-change: transform;
 }
 
 @keyframes authModalIn {
@@ -282,7 +296,12 @@ body {
   inset: 0;
   border: 4px dashed var(--accent-primary);
   border-radius: 999px;
-  animation: authSpin 4s linear infinite;
+  animation: authSpin 4s linear infinite paused;
+  will-change: transform;
+}
+
+.auth-modal-card.is-animating .auth-ring {
+  animation-play-state: running;
 }
 
 .auth-sensor {
@@ -302,7 +321,12 @@ body {
   border-radius: 999px;
   background: var(--accent-primary);
   box-shadow: 0 0 26px rgba(0, 245, 160, 0.55);
-  animation: authPulse 1.4s ease-in-out infinite;
+  animation: authPulse 1.4s ease-in-out infinite paused;
+  will-change: transform, opacity;
+}
+
+.auth-modal-card.is-animating .auth-sensor::after {
+  animation-play-state: running;
 }
 
 @keyframes authSpin {
@@ -335,7 +359,8 @@ body {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-  transition: width 0.45s ease;
+  transition: width 0.3s ease;
+  will-change: width;
 }
 
 .auth-cancel {
@@ -347,6 +372,7 @@ body {
   color: #f3f4f6;
   font-weight: 800;
   cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .auth-cancel:hover {
@@ -382,7 +408,7 @@ body {
   color: #f3f4f6;
   padding: 12px 14px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .studio-input:focus {
@@ -408,5 +434,15 @@ textarea.studio-input {
   .studio-hero {
     min-height: 76vh;
     padding-top: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
