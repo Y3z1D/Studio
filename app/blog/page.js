@@ -18,7 +18,7 @@ export default function BlogPage() {
 
           <article className="studio-card blog-article">
             <header className="mb-8">
-              <p className="studio-card-text mb-3">Published Jun 11, 2026</p>
+              <p className="studio-card-text mb-3">Published May 15, 2026</p>
               <h1 className="studio-section-title mb-5">
                 The World Inside the Network: My Journey from Curiosity to Cybersecurity
               </h1>
