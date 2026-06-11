@@ -1,14 +1,14 @@
-import './globals.css'
+import './globals.css';
 
 export const metadata = {
-  title: 'Y3z1D Portfolio',
-  description: 'Portfolio and blog by Y3z1D',
-}
+  title: 'Y3z1D Studio',
+  description: 'Portfolio and blog'
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="body">{children}</body>
     </html>
-  )
+  );
 }
