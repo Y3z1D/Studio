@@ -1,3 +1,4 @@
-# Y3z1D Portfolio Blog
+# Y3z1D Studio
+
 
 
