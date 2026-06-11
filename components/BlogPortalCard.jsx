@@ -1,33 +1,91 @@
-'use client'
+"use client";
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function BlogPortalCard() {
-  const posts = [
-    {
-      id: 1,
-      title: 'Getting Started with Next.js',
-      excerpt: 'Learn how to build modern web applications with Next.js and React.',
-      date: '2024-01-15',
-    },
-    {
-      id: 2,
-      title: 'Tailwind CSS Tips & Tricks',
-      excerpt: 'Discover powerful techniques to make your styling workflow more efficient.',
-      date: '2024-01-10',
-    },
-  ]
+  const router = useRouter();
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [status, setStatus] = useState('Waiting for security token or Passkey touch...');
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (!isAuthenticating) {
+      return undefined;
+    }
+
+    setProgress(12);
+    setStatus('Waiting for security token or Passkey touch...');
+
+    const scanTimer = window.setTimeout(() => {
+      setProgress(48);
+      setStatus('Communicating with hardware authenticator...');
+    }, 650);
+
+    const verifyTimer = window.setTimeout(() => {
+      setProgress(82);
+      setStatus('Credential verified. Loading secure blog container...');
+    }, 1450);
+
+    const routeTimer = window.setTimeout(() => {
+      setProgress(100);
+      router.push('/blog');
+    }, 2300);
+
+    return () => {
+      window.clearTimeout(scanTimer);
+      window.clearTimeout(verifyTimer);
+      window.clearTimeout(routeTimer);
+    };
+  }, [isAuthenticating, router]);
+
+  function openPortal() {
+    setIsAuthenticating(true);
+  }
+
+  function cancelPortal() {
+    setIsAuthenticating(false);
+    setProgress(0);
+    setStatus('Waiting for security token or Passkey touch...');
+  }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {posts.map((post) => (
-        <article
-          key={post.id}
-          className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition"
-        >
-          <h3 className="text-2xl font-bold mb-2">{post.title}</h3>
-          <p className="text-gray-600 mb-4">{post.excerpt}</p>
-          <time className="text-sm text-gray-500">{post.date}</time>
-        </article>
-      ))}
-    </div>
-  )
+    <>
+      <button type="button" className="studio-card studio-link-card blog-portal-card" onClick={openPortal}>
+        <span className="studio-card-title text-xl">
+          How to Create a Professional Website in 2026
+        </span>
+        <span className="studio-card-text">
+          Share your knowledge and attract clients with clean design, strong branding,
+          and modern development practices.
+        </span>
+        <span className="studio-card-action">Read Blog</span>
+      </button>
+
+      {isAuthenticating && (
+        <div className="auth-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="blog-auth-title">
+          <div className="auth-modal-card">
+            <div className="auth-shield" aria-hidden="true">◇</div>
+            <h2 id="blog-auth-title">WebAuthn Authentication</h2>
+            <p className="auth-subtitle">Hardware Token Attestation Required</p>
+
+            <div className="auth-orb" aria-hidden="true">
+              <div className="auth-ring"></div>
+              <div className="auth-sensor"></div>
+            </div>
+
+            <p className="auth-status">{status}</p>
+
+            <div className="auth-progress-track" aria-hidden="true">
+              <div className="auth-progress-bar" style={{ width: `${progress}%` }}></div>
+            </div>
+
+            <button type="button" className="auth-cancel" onClick={cancelPortal}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
