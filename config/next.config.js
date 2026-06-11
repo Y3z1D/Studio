@@ -64,7 +64,7 @@ if (isProduction) {
 
 /** @type {import('next').NextConfig} */
 module.exports = {
-  outputFileTracingRoot: path.join(__dirname, '..'),
+  outputFileTracingRoot: path.resolve(__dirname, '..'),
   poweredByHeader: false,
   async headers() {
     return [
